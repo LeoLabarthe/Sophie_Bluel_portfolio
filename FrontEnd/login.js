@@ -21,7 +21,9 @@ form.addEventListener('submit', async (e) => {
         const result = await response.json();
 
         sessionStorage.setItem('token', result.token);
+
+        window.location.href = 'index.html';
         return;
     }
     document.getElementById('error-login').style.visibility = 'visible';
-})
+});
