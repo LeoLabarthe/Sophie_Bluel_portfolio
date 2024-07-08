@@ -1,6 +1,5 @@
 function showWork(el) {
 
-    // Add this work on the section "Mes projets"
     const work = 
         `<figure data-category="${el.categoryId}" data-id="${el.id}">
             <img src="${el.imageUrl}" alt="${el.title}">
@@ -9,11 +8,9 @@ function showWork(el) {
     
     document.querySelector('.gallery').insertAdjacentHTML('beforeend', work);
 
-    // Add this work on the modal
     const content = 
         `<figure data-id="${el.id}">
             <img src="${el.imageUrl}" alt="${el.title}">
-            <figcaption>éditer</figcaption>
             <button class="btn-del-icon" data-id="${el.id}">
                 <img src="assets/icons/bin-icon.svg" alt="Icône d'une corbeille">
             </button>
