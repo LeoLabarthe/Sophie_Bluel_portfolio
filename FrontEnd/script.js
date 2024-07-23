@@ -40,7 +40,6 @@ async function initWorks() {
     }
     catch(error) {
         alert("Une erreur est survenue lors de l'initialisation des travaux.");
-        console.log(error);
     }
 }
 
@@ -75,13 +74,9 @@ async function addWork() {
             const data = await response.json();
             showWork(data)
         }
-        else {
-            console.log("Erreur lors de la création du projet.");
-        }
     }
     catch(error) {
         alert("Une erreur est survenue lors de l'ajout d'un nouveau projet.");
-        console.log(error);
     }
 }
 
@@ -101,7 +96,6 @@ async function deleteWork(id) {
         }
     } catch (error) {
         alert("Une erreur est survenue lors de la suppression.");
-        console.log(error);
     }
 }
 
@@ -139,7 +133,6 @@ async function showCategories() {
             })
         })
     } catch (e) {
-        console.log(e);
         alert("Une erreur est survenue lors de la récupération des catégories.");
     }
 }
