@@ -88,16 +88,26 @@ async function deleteWork(id) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             }
-        })
-        if(resultFetch.ok) {
-            document.querySelectorAll(`figure[data-id="${id}"]`).forEach(item => {
-                item.parentNode.removeChild(item);
-            })
+        });
+
+        if (!resultFetch.ok) {
+            const errorText = await resultFetch.text();
+            throw new Error(`Error ${resultFetch.status}: ${errorText}`);
         }
+
+        const figures = document.querySelectorAll(`figure[data-id="${id}"]`);
+        if (figures.length === 0) {
+            console.warn(`No elements found with data-id="${id}"`);
+        }
+        figures.forEach(item => {
+            item.parentNode.removeChild(item);
+        });
+
     } catch (error) {
         alert("Une erreur est survenue lors de la suppression.");
     }
 }
+
 
 function filterWorks(category) {
     for (const figure of document.querySelector('.gallery').getElementsByTagName("figure")) {
