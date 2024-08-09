@@ -1,5 +1,4 @@
 function showWork(el) {
-
     const work = 
         `<figure data-category="${el.categoryId}" data-id="${el.id}">
             <img src="${el.imageUrl}" alt="${el.title}">
@@ -17,6 +16,14 @@ function showWork(el) {
         </figure>`;
 
     document.querySelector('.modal-gallery').insertAdjacentHTML('beforeend', content);
+
+    // add event listener for the delete button
+    document.querySelectorAll(`.btn-del-icon[data-id="${el.id}"]`).forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            deleteWork(el.id);
+        });
+    });
 }
 
 async function initWorks() {
@@ -48,37 +55,37 @@ async function addWork() {
         const picture = document.querySelector('.img-addwork').files[0];
         const title = document.querySelector('.title-addwork');
         const category = document.querySelector('.categories-addwork');
-        
-        if(picture.name <= 0 || (!['image/jpeg', 'image/png', 'image/jpg'].includes(picture.type))) {
-            return alert("L'image n'est pas sélectionné ou son format est incorrect.");
+
+        if (!picture || !['image/jpeg', 'image/png', 'image/jpg'].includes(picture.type)) {
+            return alert("L'image n'est pas sélectionnée ou son format est incorrect.");
         }
-        if(title.value.length <= 0) {
+        if (title.value.length <= 0) {
             return alert("Veuillez entrer un titre.");
         }
-        if(category.value.length <= 0) {
+        if (category.value.length <= 0) {
             return alert("Veuillez sélectionner une catégorie.");
         }
 
         const formData = new FormData(document.getElementById('addwork-form'));
-        
+
         const response = await fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             },
             body: formData
-        })
-        if(response.ok) {
-            showPhotoGallery();
+        });
 
+        if (response.ok) {
             const data = await response.json();
-            showWork(data)
+            showWork(data); // Call to showWork to update the UI
+            showPhotoGallery(); // Update gallery to show the new work
         }
-    }
-    catch(error) {
+    } catch (error) {
         alert("Une erreur est survenue lors de l'ajout d'un nouveau projet.");
     }
 }
+
 
 async function deleteWork(id) {
     try {
@@ -90,11 +97,13 @@ async function deleteWork(id) {
             }
         });
 
+        // Check the response
         if (!resultFetch.ok) {
             const errorText = await resultFetch.text();
             throw new Error(`Error ${resultFetch.status}: ${errorText}`);
         }
 
+        // Delete elements from the DOM
         const figures = document.querySelectorAll(`figure[data-id="${id}"]`);
         if (figures.length === 0) {
             console.warn(`No elements found with data-id="${id}"`);
@@ -103,10 +112,13 @@ async function deleteWork(id) {
             item.parentNode.removeChild(item);
         });
 
+        console.log(`Successfully deleted work with id ${id}`);
     } catch (error) {
+        console.error("An error occurred during deletion:", error);
         alert("Une erreur est survenue lors de la suppression.");
     }
 }
+
 
 
 function filterWorks(category) {
